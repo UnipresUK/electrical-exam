@@ -26,64 +26,16 @@
   .btn-submit:disabled { opacity: 0.4; cursor: not-allowed; }
   .img-box { border: 1px dashed #ccc; border-radius: 8px; padding: 8px; margin-bottom: 12px; background: #fafaf9; }
   .img-box img { max-width: 100%; border-radius: 6px; display: block; }
-
-  /* Multiple choice */
   .mc-options { list-style: none; padding: 0; margin: 0 0 10px 0; }
   .mc-options li { margin-bottom: 6px; }
   .mc-options label { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #1a1a1a; cursor: pointer; padding: 8px 12px; border: 1px solid #e5e5e3; border-radius: 8px; background: #fafaf9; transition: border-color 0.15s; }
   .mc-options label:hover { border-color: #aaa; }
   .mc-options input[type=radio] { accent-color: #1a1a1a; }
-
-  /* Reviewer */
-  #reviewer-view { display: none; }
-  .total-bar { background: #fff; border: 1px solid #e5e5e3; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-  .total-score { font-size: 32px; font-weight: 500; }
-  .pass-badge { font-size: 13px; padding: 4px 12px; border-radius: 6px; display: inline-block; margin-top: 6px; }
-  .pass { background: #d4edda; color: #1a5c2a; }
-  .fail { background: #fde8e8; color: #8b1a1a; }
-  .progress-wrap { background: #eee; border-radius: 999px; height: 6px; width: 200px; overflow: hidden; }
-  .progress-fill { height: 100%; border-radius: 999px; background: #1a1a1a; transition: width 0.3s; }
-  .r-answer { font-size: 14px; background: #fafaf9; border-left: 3px solid #ccc; border-radius: 6px; padding: 10px 12px; margin: 8px 0; line-height: 1.6; }
-  .model-answer { font-size: 13px; color: #2a6e2a; background: #f0faf0; border-left: 3px solid #6ab06a; border-radius: 6px; padding: 10px 12px; margin: 8px 0; line-height: 1.5; }
-  .model-label { font-size: 11px; font-weight: 600; color: #2a6e2a; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.06em; }
-  .score-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
-  .score-row span { font-size: 13px; color: #666; }
-  .score-btns { display: flex; gap: 6px; }
-  .score-btn { border: 1px solid #ddd; background: #fff; color: #1a1a1a; border-radius: 6px; padding: 5px 12px; font-size: 13px; cursor: pointer; font-family: inherit; }
-  .score-btn:hover { background: #f0f0f0; }
-  .score-btn.selected { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
-  .email-btn { border: 1px solid #ddd; background: #fff; color: #1a1a1a; border-radius: 8px; padding: 9px 16px; font-size: 14px; cursor: pointer; font-family: inherit; text-decoration: none; display: inline-block; }
-  .email-btn:hover { background: #f5f5f3; }
-  .export-btn { border: 1px solid #ddd; background: #fff; color: #1a1a1a; border-radius: 8px; padding: 9px 16px; font-size: 14px; cursor: pointer; font-family: inherit; margin-left: 8px; }
-  .export-btn:hover { background: #f5f5f3; }
-  #submitted-view .checkmark { width: 64px; height: 64px; background: #d4edda; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 32px; color: #1a5c2a; }
-
-  /* QR Code page */
-  #qr-view { display: none; text-align: center; }
-  #qr-view .card { padding: 2rem; }
-  #qr-view canvas { margin: 1rem auto; display: block; }
-  .view-toggle { position: fixed; top: 12px; right: 12px; z-index: 100; display: flex; gap: 6px; }
-  .view-toggle button { border: 1px solid #ddd; background: #fff; color: #1a1a1a; border-radius: 6px; padding: 6px 14px; font-size: 12px; cursor: pointer; font-family: inherit; }
-  .view-toggle button:hover { background: #f0f0f0; }
-  .view-toggle button.active { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
-
-  @media (max-width: 500px) {
-    .identity-row { grid-template-columns: 1fr; }
-    .total-bar { flex-direction: column; }
-    .view-toggle { position: static; justify-content: center; margin-bottom: 1rem; }
-  }
+  @media (max-width: 500px) { .identity-row { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
 <div class="app">
-
-  <!-- NAV TOGGLE -->
-  <div class="view-toggle">
-    <button id="nav-exam" class="active" onclick="showView('exam')">Exam</button>
-    <button id="nav-review" style="display:none" onclick="showView('review')">Review Answers</button>
-    <button id="nav-submitted" style="display:none">Submitted</button>
-    <button id="nav-qr" onclick="showView('qr')">QR Code</button>
-  </div>
 
   <!-- EXAM VIEW -->
   <div id="exam-view">
@@ -99,32 +51,7 @@
     <button class="btn-submit" id="submit-btn" onclick="submitExam()">Submit answers</button>
   </div>
 
-  <!-- REVIEWER VIEW -->
-  <div id="reviewer-view">
-    <h1>Reviewer Panel</h1>
-    <p class="subtitle" id="reviewer-subtitle"></p>
-
-    <div class="total-bar">
-      <div>
-        <div style="font-size:13px;color:#666;margin-bottom:4px;">Total score</div>
-        <div class="total-score"><span id="total-display">0</span> / <span id="total-possible">25</span></div>
-        <div id="pass-fail-badge" class="pass-badge fail">Fail</div>
-      </div>
-      <div>
-        <div style="font-size:13px;color:#666;margin-bottom:6px;">Progress</div>
-        <div class="progress-wrap"><div class="progress-fill" id="score-bar" style="width:0%"></div></div>
-        <div style="font-size:12px;color:#aaa;margin-top:4px;">Pass mark: 60%</div>
-      </div>
-      <div>
-        <a class="email-btn" id="email-link" href="#">Send results by email</a>
-        <button class="export-btn" onclick="exportCSV()">Export CSV</button>
-      </div>
-    </div>
-
-    <div id="review-container"></div>
-  </div>
-
-  <!-- SUBMITTED CONFIRMATION (what the apprentice sees) -->
+  <!-- SUBMITTED CONFIRMATION -->
   <div id="submitted-view" style="display:none; text-align:center;">
     <div class="card" style="padding:2.5rem 1.5rem;">
       <div style="font-size:48px;margin-bottom:12px;">&#10003;</div>
@@ -135,76 +62,32 @@
     </div>
   </div>
 
-  <!-- QR CODE VIEW -->
-  <div id="qr-view">
-    <h1>Share This Exam</h1>
-    <p class="subtitle">Scan the QR code or share the link below</p>
-    <div class="card">
-      <canvas id="qr-canvas"></canvas>
-      <p style="margin-top:1rem;font-size:14px;word-break:break-all;" id="exam-url-display"></p>
-      <button class="btn-submit" style="max-width:300px;margin:1rem auto 0;" onclick="copyLink()">Copy link</button>
-    </div>
-  </div>
-
 </div>
 
-<!-- QR Code library (lightweight, no dependencies) -->
-<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
-
 <script>
-/* ─────────────────────────────────────────────
-   CONFIGURATION — Edit questions.json to change
-   exam content, add images, etc.
-   ───────────────────────────────────────────── */
-
-/* ─────────────────────────────────────────────
-   GOOGLE SHEETS INTEGRATION
-   Paste your Google Apps Script Web App URL below.
-   See google-apps-script.js for setup instructions.
-   ───────────────────────────────────────────── */
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxOdCiEMvABzkW2Wgh4a_ZFAQOlhTzk53-34CPl8ZkJ8PDdhO3xbrwB28PufBxjQ_jb/exec";
 
 let questions = [];
 let TOTAL = 0;
-let PASS_PERCENT = 60;
-const scores = {};
 let submitted = {};
 let apprenticeName = "", examDate = "";
 
-/* ── Load questions from JSON ── */
 async function loadQuestions() {
   try {
     const res = await fetch("questions.json");
     questions = await res.json();
   } catch (e) {
-    console.error("Could not load questions.json, using fallback", e);
-    questions = [];
+    console.error("Could not load questions.json", e);
   }
   TOTAL = questions.reduce((sum, q) => sum + q.marks, 0);
-  const passMarks = Math.ceil(TOTAL * PASS_PERCENT / 100);
   document.getElementById("total-marks-display").textContent = TOTAL;
-  document.getElementById("total-possible").textContent = TOTAL;
   buildExam();
 }
 
-/* ── View switching ── */
-function showView(view) {
-  document.getElementById("exam-view").style.display = view === "exam" ? "block" : "none";
-  document.getElementById("reviewer-view").style.display = view === "review" ? "block" : "none";
-  document.getElementById("submitted-view").style.display = view === "submitted" ? "block" : "none";
-  document.getElementById("qr-view").style.display = view === "qr" ? "block" : "none";
-  document.querySelectorAll(".view-toggle button").forEach(b => b.classList.remove("active"));
-  const navBtn = document.getElementById("nav-" + view);
-  if (navBtn) navBtn.classList.add("active");
-  if (view === "qr") generateQR();
-}
-
-/* ── Build Exam ── */
 function buildExam() {
   const c = document.getElementById("questions-container");
   c.innerHTML = "";
-  const today = new Date().toISOString().split("T")[0];
-  document.getElementById("app-date").value = today;
+  document.getElementById("app-date").value = new Date().toISOString().split("T")[0];
   let lastSection = null;
 
   questions.forEach(q => {
@@ -220,10 +103,9 @@ function buildExam() {
 
     const imgHTML = q.image ? `<div class="img-box"><img src="${q.image}" alt="Reference diagram for question ${q.q}" loading="lazy" /></div>` : "";
 
-    // Support multiple choice questions (if q.options array exists)
     let inputHTML = "";
     if (q.options && q.options.length > 0) {
-      inputHTML = `<ul class="mc-options">${q.options.map((opt, i) =>
+      inputHTML = `<ul class="mc-options">${q.options.map(opt =>
         `<li><label><input type="radio" name="ans-${q.q}" value="${opt}" /> ${opt}</label></li>`
       ).join("")}</ul>`;
     } else {
@@ -241,7 +123,6 @@ function buildExam() {
   });
 }
 
-/* ── Submit Exam ── */
 async function submitExam() {
   apprenticeName = document.getElementById("app-name").value.trim();
   examDate = document.getElementById("app-date").value;
@@ -260,166 +141,42 @@ async function submitExam() {
     }
   });
 
-  /* ── Send answers to Google Sheets ── */
-  if (GOOGLE_SCRIPT_URL && GOOGLE_SCRIPT_URL !== "PASTE_YOUR_URL_HERE") {
+  if (GOOGLE_SCRIPT_URL) {
     try {
-      const payload = {
-        name: apprenticeName,
-        date: examDate,
-        answers: questions.map(q => ({
-          q: q.q,
-          marks: q.marks,
-          question: q.text,
-          answer: submitted[q.q] || "(no answer)"
-        }))
-      };
       await fetch(GOOGLE_SCRIPT_URL, {
         method: "POST",
         mode: "no-cors",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({
+          name: apprenticeName,
+          date: examDate,
+          answers: questions.map(q => ({
+            q: q.q, marks: q.marks, question: q.text,
+            answer: submitted[q.q] || "(no answer)"
+          }))
+        })
       });
-      console.log("Answers sent to Google Sheets");
-    } catch (err) {
-      console.warn("Could not send to Google Sheets:", err);
-    }
+    } catch (err) { console.warn("Could not send to Google Sheets:", err); }
   }
 
-  /* ── Show confirmation to apprentice ── */
   document.getElementById("exam-view").style.display = "none";
   document.getElementById("submitted-view").style.display = "block";
   document.getElementById("submitted-name").textContent = apprenticeName;
-
-  /* ── Also prepare reviewer view (accessible via nav) ── */
-  document.getElementById("reviewer-subtitle").textContent = `${apprenticeName} — ${examDate}`;
-  document.querySelectorAll(".view-toggle button").forEach(b => b.classList.remove("active"));
-  document.getElementById("nav-submitted").classList.add("active");
-  buildReviewer();
 }
 
-/* ── Build Reviewer ── */
-function buildReviewer() {
-  const c = document.getElementById("review-container");
-  c.innerHTML = "";
-  let lastSection = null;
-
-  questions.forEach(q => {
-    if (q.section && q.section !== lastSection) {
-      const sl = document.createElement("div");
-      sl.className = "section-label";
-      sl.style.marginTop = "1.5rem";
-      sl.textContent = q.section;
-      c.appendChild(sl);
-      lastSection = q.section;
-    }
-
-    const card = document.createElement("div");
-    card.className = "card";
-    const opts = Array.from({ length: q.marks + 1 }, (_, i) => i);
-    const ans = submitted[q.q] || '<span style="color:#aaa;font-style:italic">No answer given</span>';
-
-    card.innerHTML = `
-      <div class="q-number">Question ${q.q} · ${q.marks} mark${q.marks > 1 ? "s" : ""}</div>
-      <div class="q-text">${q.text}</div>
-      <div class="r-answer">${ans}</div>
-      <div class="model-answer"><div class="model-label">Model Answer</div>${q.answer}</div>
-      <div class="score-row">
-        <span>Your mark:</span>
-        <div class="score-btns" id="btns-${q.q}">${opts.map(m => `<button class="score-btn" onclick="setScore(${q.q},${m})">${m}</button>`).join("")}</div>
-      </div>
-    `;
-    c.appendChild(card);
-  });
-  updateTotal();
-}
-
-/* ── Scoring ── */
-function setScore(qNum, mark) {
-  scores[qNum] = mark;
-  document.querySelectorAll(`#btns-${qNum} .score-btn`).forEach((b, i) => b.classList.toggle("selected", i === mark));
-  updateTotal();
-}
-
-function updateTotal() {
-  const passMarks = Math.ceil(TOTAL * PASS_PERCENT / 100);
-  let total = Object.values(scores).reduce((a, b) => a + b, 0);
-  document.getElementById("total-display").textContent = total;
-  document.getElementById("score-bar").style.width = Math.round(total / TOTAL * 100) + "%";
-  const badge = document.getElementById("pass-fail-badge");
-  badge.textContent = total >= passMarks ? "Pass" : "Fail";
-  badge.className = "pass-badge " + (total >= passMarks ? "pass" : "fail");
-
-  let body = `Electrical Drawing Exam Results\nApprentice: ${apprenticeName}\nDate: ${examDate}\nTotal: ${total}/${TOTAL} — ${total >= passMarks ? "PASS" : "FAIL"}\n\n`;
-  questions.forEach(q => {
-    body += `Q${q.q} (${q.marks}mk — scored: ${scores[q.q] !== undefined ? scores[q.q] : "?"}):\n${submitted[q.q] || "(no answer)"}\n\n`;
-  });
-  document.getElementById("email-link").href = `mailto:?subject=Exam Results — ${apprenticeName} — ${examDate}&body=${encodeURIComponent(body)}`;
-}
-
-/* ── Export CSV ── */
-function exportCSV() {
-  let csv = "Question,Marks Available,Answer Given,Score Awarded\n";
-  questions.forEach(q => {
-    const ans = (submitted[q.q] || "").replace(/"/g, '""');
-    csv += `"Q${q.q}: ${q.text.replace(/"/g, '""')}",${q.marks},"${ans}",${scores[q.q] !== undefined ? scores[q.q] : ""}\n`;
-  });
-  const passMarks = Math.ceil(TOTAL * PASS_PERCENT / 100);
-  const total = Object.values(scores).reduce((a, b) => a + b, 0);
-  csv += `\n"TOTAL",${TOTAL},,${total}\n"RESULT",,,${total >= passMarks ? "PASS" : "FAIL"}\n`;
-
-  const blob = new Blob([csv], { type: "text/csv" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = `exam-results-${apprenticeName.replace(/\s+/g, "-")}-${examDate}.csv`;
-  a.click();
-}
-
-/* ── QR Code ── */
-function generateQR() {
-  const url = window.location.href.split("?")[0];
-  document.getElementById("exam-url-display").textContent = url;
-  const canvas = document.getElementById("qr-canvas");
-  if (typeof QRCode !== "undefined") {
-    QRCode.toCanvas(canvas, url, { width: 280, margin: 2, color: { dark: "#1a1a1a", light: "#ffffff" } });
-  } else {
-    canvas.style.display = "none";
-    document.getElementById("exam-url-display").textContent = url + "\n\n(QR library not loaded — share this link directly)";
-  }
-}
-
-function copyLink() {
-  const url = window.location.href.split("?")[0];
-  navigator.clipboard.writeText(url).then(() => {
-    const btn = event.target;
-    btn.textContent = "Copied!";
-    setTimeout(() => btn.textContent = "Copy link", 2000);
-  });
-}
-
-/* ── Reset Exam (retake) ── */
 function resetExam() {
-  // Clear all state
   submitted = {};
   apprenticeName = "";
   examDate = "";
-  Object.keys(scores).forEach(k => delete scores[k]);
-
-  // Clear form inputs
   document.getElementById("app-name").value = "";
   const btn = document.getElementById("submit-btn");
   btn.disabled = false;
   btn.textContent = "Submit answers";
-
-  // Rebuild fresh questions with empty textareas
   buildExam();
-
-  // Hide reviewer nav buttons, show exam
-  document.getElementById("nav-review").style.display = "none";
-  document.getElementById("nav-submitted").style.display = "none";
-  showView("exam");
+  document.getElementById("submitted-view").style.display = "none";
+  document.getElementById("exam-view").style.display = "block";
 }
 
-/* ── Init ── */
 loadQuestions();
 </script>
 </body>

@@ -1,0 +1,27 @@
+[
+  {
+    "section": "Section A — Your Section Name Here",
+    "q": 1,
+    "text": "Your first question here?",
+    "marks": 1,
+    "image": null,
+    "answer": "The model answer for question 1."
+  },
+  {
+    "section": null,
+    "q": 2,
+    "text": "Your second question here?",
+    "marks": 1,
+    "image": "images/your-image.jpg",
+    "answer": "The model answer for question 2."
+  },
+  {
+    "section": "Section B — Another Section",
+    "q": 3,
+    "text": "A multiple choice question?",
+    "marks": 2,
+    "image": null,
+    "options": ["Option A", "Option B", "Option C", "Option D"],
+    "answer": "Option B"
+  }
+]

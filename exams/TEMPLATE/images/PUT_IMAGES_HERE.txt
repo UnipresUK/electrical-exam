@@ -1,0 +1,4 @@
+Drop your question images (JPG, PNG, etc.) into this folder.
+
+Then in questions.json, set the image field to:
+  "image": "images/your-filename.jpg"

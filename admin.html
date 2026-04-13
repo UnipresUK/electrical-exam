@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin — Electrical Exam UPUK0001</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f3; color: #1a1a1a; font-size: 16px; line-height: 1.6; }
+  .app { max-width: 800px; margin: 0 auto; padding: 2rem 1.25rem; }
+  h1 { font-size: 22px; font-weight: 500; margin-bottom: 4px; }
+  h2 { font-size: 17px; font-weight: 500; margin-bottom: 8px; }
+  .subtitle { font-size: 13px; color: #666; margin-bottom: 2rem; }
+  .card { background: #fff; border: 1px solid #e5e5e3; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+  .section-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: #999; margin: 1.5rem 0 0.75rem; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 6px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .tabs button { border: 1px solid #ddd; background: #fff; color: #1a1a1a; border-radius: 8px; padding: 8px 18px; font-size: 14px; cursor: pointer; font-family: inherit; font-weight: 500; }
+  .tabs button:hover { background: #f0f0f0; }
+  .tabs button.active { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* QR */
+  .qr-section { text-align: center; }
+  .qr-section canvas { margin: 1rem auto; display: block; }
+  .qr-url { font-size: 14px; word-break: break-all; color: #444; margin: 1rem 0; }
+  .copy-btn { background: #1a1a1a; color: #fff; border: none; border-radius: 8px; padding: 10px 24px; font-size: 14px; cursor: pointer; font-family: inherit; }
+  .copy-btn:hover { background: #333; }
+
+  /* Answer key */
+  .q-number { font-size: 12px; color: #aaa; margin-bottom: 4px; }
+  .q-text { font-size: 15px; color: #1a1a1a; margin-bottom: 8px; line-height: 1.5; }
+  .marks { font-size: 12px; color: #888; margin-bottom: 8px; }
+  .model-answer { font-size: 13px; color: #2a6e2a; background: #f0faf0; border-left: 3px solid #6ab06a; border-radius: 6px; padding: 10px 12px; margin: 8px 0; line-height: 1.5; }
+  .model-label { font-size: 11px; font-weight: 600; color: #2a6e2a; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .img-box { border: 1px dashed #ccc; border-radius: 8px; padding: 8px; margin-bottom: 10px; background: #fafaf9; }
+  .img-box img { max-width: 100%; border-radius: 6px; display: block; }
+
+  /* Exam list */
+  .exam-list { list-style: none; padding: 0; }
+  .exam-list li { padding: 12px 16px; border: 1px solid #e5e5e3; border-radius: 8px; margin-bottom: 8px; background: #fff; display: flex; align-items: center; justify-content: space-between; }
+  .exam-list a { color: #1a1a1a; text-decoration: none; font-weight: 500; }
+  .exam-list a:hover { text-decoration: underline; }
+  .exam-list .badge { font-size: 11px; background: #e8f0fe; color: #1a56db; padding: 2px 8px; border-radius: 4px; }
+
+  /* How-to */
+  .how-to { font-size: 14px; color: #444; line-height: 1.7; }
+  .how-to code { background: #f0f0ee; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+  .how-to ol { padding-left: 1.2rem; margin: 0.5rem 0; }
+  .how-to li { margin-bottom: 6px; }
+  .how-to h3 { font-size: 15px; font-weight: 600; margin: 1.2rem 0 0.5rem; color: #1a1a1a; }
+
+  @media (max-width: 500px) { .tabs { flex-direction: column; } }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <h1>Admin Panel</h1>
+  <p class="subtitle">Electrical Drawing Exam — UPUK0001</p>
+
+  <div class="tabs">
+    <button class="active" onclick="switchTab('qr')">QR Code</button>
+    <button onclick="switchTab('answers')">Answer Key</button>
+    <button onclick="switchTab('sheets')">Google Sheet</button>
+    <button onclick="switchTab('howto')">How to Edit</button>
+  </div>
+
+  <!-- ── QR CODE TAB ── -->
+  <div id="tab-qr" class="tab-panel active">
+    <div class="card qr-section">
+      <h2>Share Exam Link</h2>
+      <p style="color:#666;font-size:13px;">Apprentices scan this to open the exam on their phone</p>
+      <canvas id="qr-canvas"></canvas>
+      <p class="qr-url" id="exam-url"></p>
+      <button class="copy-btn" onclick="copyLink()">Copy link</button>
+      <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid #eee;">
+        <button class="copy-btn" style="background:#fff;color:#1a1a1a;border:1px solid #ddd;" onclick="printQR()">Print QR Code</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ANSWER KEY TAB ── -->
+  <div id="tab-answers" class="tab-panel">
+    <div class="card" style="margin-bottom:1rem;background:#fffbeb;border-color:#f0e4b8;">
+      <p style="font-size:13px;color:#92700c;">These are the model answers. Apprentices never see this page — only the exam at the link above.</p>
+    </div>
+    <div id="answer-key-container"></div>
+  </div>
+
+  <!-- ── GOOGLE SHEET TAB ── -->
+  <div id="tab-sheets" class="tab-panel">
+    <div class="card">
+      <h2>View Submissions</h2>
+      <p style="color:#666;font-size:14px;margin-bottom:1rem;">All submitted answers are collected in your Google Sheet. Open it to review and mark.</p>
+      <a href="https://docs.google.com/spreadsheets" target="_blank" class="copy-btn" style="text-decoration:none;display:inline-block;">Open Google Sheets</a>
+      <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid #eee;">
+        <p style="font-size:13px;color:#888;">Each submission creates a new row with: Timestamp, Name, Date, and all answers (Q1-Q10).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── HOW TO EDIT TAB ── -->
+  <div id="tab-howto" class="tab-panel">
+    <div class="card how-to">
+      <h3>Adding / Editing Questions</h3>
+      <ol>
+        <li>Go to <a href="https://github.com/UnipresUK/electrical-exam" target="_blank">your GitHub repo</a></li>
+        <li>Open <code>questions.json</code> and click the pencil icon to edit</li>
+        <li>Each question looks like this:</li>
+      </ol>
+<pre style="background:#f5f5f3;padding:12px;border-radius:8px;font-size:12px;overflow-x:auto;margin:8px 0;">
+{
+  "section": "Section A — Terminology",
+  "q": 1,
+  "text": "Your question here?",
+  "marks": 1,
+  "image": "images/my-photo.jpg",
+  "answer": "The correct answer."
+}
+</pre>
+      <p>Set <code>"image"</code> to <code>null</code> if no image is needed.</p>
+
+      <h3>Adding Images</h3>
+      <ol>
+        <li>Go to the <code>images/</code> folder in your GitHub repo</li>
+        <li>Click <strong>Add file > Upload files</strong></li>
+        <li>Drag your image in (JPG, PNG, etc.)</li>
+        <li>Commit the change</li>
+        <li>In <code>questions.json</code>, set the image field to: <code>"images/your-filename.jpg"</code></li>
+      </ol>
+      <p>That's it — the image will show above the answer box for that question.</p>
+
+      <h3>Creating a New Exam</h3>
+      <ol>
+        <li>In your GitHub repo, click <strong>Add file > Create new file</strong></li>
+        <li>Type <code>exams/UPUK0002/questions.json</code> as the filename (this creates the folder automatically)</li>
+        <li>Paste in a new set of questions (copy the format from the existing <code>questions.json</code>)</li>
+        <li>Upload any images to <code>exams/UPUK0002/images/</code></li>
+        <li>Copy <code>index.html</code> into that folder too (or I can set that up for you)</li>
+        <li>The new exam will be at: <code>unipresuk.github.io/electrical-exam/exams/UPUK0002/</code></li>
+      </ol>
+
+      <h3>Multiple Choice Questions</h3>
+      <p>Add an <code>"options"</code> array to any question:</p>
+<pre style="background:#f5f5f3;padding:12px;border-radius:8px;font-size:12px;overflow-x:auto;margin:8px 0;">
+{
+  "q": 11,
+  "text": "What colour is a neutral conductor?",
+  "marks": 1,
+  "image": null,
+  "options": ["Brown", "Blue", "Green/Yellow", "Black"],
+  "answer": "Blue"
+}
+</pre>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+<script>
+let questions = [];
+
+/* ── Tab switching ── */
+function switchTab(name) {
+  document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
+  document.getElementById("tab-" + name).classList.add("active");
+  event.target.classList.add("active");
+  if (name === "qr") generateQR();
+}
+
+/* ── Load questions & build answer key ── */
+async function init() {
+  try {
+    const res = await fetch("questions.json");
+    questions = await res.json();
+  } catch (e) { console.error(e); }
+  buildAnswerKey();
+  generateQR();
+}
+
+function buildAnswerKey() {
+  const c = document.getElementById("answer-key-container");
+  c.innerHTML = "";
+  let lastSection = null;
+  const total = questions.reduce((s, q) => s + q.marks, 0);
+
+  questions.forEach(q => {
+    if (q.section && q.section !== lastSection) {
+      const sl = document.createElement("div");
+      sl.className = "section-label";
+      sl.textContent = q.section;
+      c.appendChild(sl);
+      lastSection = q.section;
+    }
+    const card = document.createElement("div");
+    card.className = "card";
+    const imgHTML = q.image ? `<div class="img-box"><img src="${q.image}" alt="Q${q.q} diagram" loading="lazy" /></div>` : "";
+    card.innerHTML = `
+      <div class="q-number">Question ${q.q}</div>
+      <div class="q-text">${q.text}</div>
+      <div class="marks">${q.marks} mark${q.marks > 1 ? "s" : ""}</div>
+      ${imgHTML}
+      <div class="model-answer"><div class="model-label">Model Answer</div>${q.answer}</div>
+    `;
+    c.appendChild(card);
+  });
+}
+
+/* ── QR Code ── */
+function generateQR() {
+  const base = window.location.href.replace(/admin\.html.*$/, "");
+  const url = base + "index.html";
+  document.getElementById("exam-url").textContent = url;
+  const canvas = document.getElementById("qr-canvas");
+  if (typeof QRCode !== "undefined") {
+    QRCode.toCanvas(canvas, url, { width: 300, margin: 2, color: { dark: "#1a1a1a", light: "#ffffff" } });
+  }
+}
+
+function copyLink() {
+  const url = document.getElementById("exam-url").textContent;
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = event.target;
+    btn.textContent = "Copied!";
+    setTimeout(() => btn.textContent = "Copy link", 2000);
+  });
+}
+
+function printQR() {
+  const canvas = document.getElementById("qr-canvas");
+  const url = document.getElementById("exam-url").textContent;
+  const win = window.open("", "_blank");
+  win.document.write(`
+    <html><head><title>Exam QR Code</title>
+    <style>body{font-family:sans-serif;text-align:center;padding:3rem;}h1{font-size:20px;margin-bottom:4px;}p{color:#666;font-size:14px;margin:1rem 0;word-break:break-all;}</style>
+    </head><body>
+    <h1>Electrical Drawing Exam</h1>
+    <p>UPUK0001</p>
+    <img src="${canvas.toDataURL()}" style="width:300px;height:300px;margin:1rem auto;display:block;" />
+    <p>${url}</p>
+    <p style="font-size:12px;color:#aaa;">Scan the QR code with your phone camera to open the exam</p>
+    </body></html>
+  `);
+  win.document.close();
+  win.onload = () => { win.print(); };
+}
+
+init();
+</script>
+</body>
+</html>
