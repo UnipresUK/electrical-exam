@@ -1,0 +1,82 @@
+[
+  {
+    "section": "Section A — Terminology (1 mark each)",
+    "q": 1,
+    "text": "What does AWG18 mean in the context of an electrical drawing?",
+    "marks": 1,
+    "image": null,
+    "answer": "AWG stands for American Wire Gauge. AWG18 refers to the wire size/thickness. The higher the AWG number the thinner the wire. AWG18 is a common control wiring size used in panels."
+  },
+  {
+    "section": null,
+    "q": 2,
+    "text": "What does a number shown in brackets on an electrical drawing signify — for example (0400) or (0615)?",
+    "marks": 1,
+    "image": "images/drawing-sheet-reference.jpg",
+    "answer": "A number in brackets is a cross-reference to another sheet in the drawing set. It tells you where that wire or signal continues to or comes from on a different drawing sheet."
+  },
+  {
+    "section": null,
+    "q": 3,
+    "text": "What does an arrow on a wire or conductor indicate on an electrical drawing?",
+    "marks": 1,
+    "image": "images/drawing-sheet-reference.jpg",
+    "answer": "An arrow indicates the continuation of a wire or signal to another sheet. The direction shows whether the signal is going to or coming from another sheet."
+  },
+  {
+    "section": null,
+    "q": 4,
+    "text": "What does CR stand for in electrical drawings and control panels?",
+    "marks": 1,
+    "image": null,
+    "answer": "CR stands for Control Relay. It is an electrically operated switch used to control circuits."
+  },
+  {
+    "section": null,
+    "q": 5,
+    "text": "What voltage is the P244 bus bar?",
+    "marks": 1,
+    "image": null,
+    "answer": "P244 is the positive DC 24V rail (+24V)."
+  },
+  {
+    "section": null,
+    "q": 6,
+    "text": "What voltage is the N244 bus bar?",
+    "marks": 1,
+    "image": null,
+    "answer": "N244 is the negative/0V DC rail (0V). It is the return path for the 24V DC circuit."
+  },
+  {
+    "section": "Section B — Understanding (2 marks each)",
+    "q": 7,
+    "text": "Looking at the drawing, what are BA-T4, BA-T5, BA-T6 and BA-T7?",
+    "marks": 2,
+    "image": "images/terminal-block-diagram.jpg",
+    "answer": "BA-T4 to BA-T7 are terminal references — specifically bus bar terminals or grouped terminal blocks shown in the control panel section. They are used to distribute power or signals to multiple destinations."
+  },
+  {
+    "section": null,
+    "q": 8,
+    "text": "What is the difference between a safety relay and a standard relay?",
+    "marks": 2,
+    "image": null,
+    "answer": "A standard relay is a basic switching device with no built-in fault detection. A safety relay is designed to meet functional safety standards (e.g. IEC 62061 / ISO 13849) — it has dual-channel inputs, self-monitoring, and forced-guided contacts to ensure it fails to a safe state if a fault occurs."
+  },
+  {
+    "section": null,
+    "q": 9,
+    "text": "What is an OSSD output and why are there typically two of them?",
+    "marks": 2,
+    "image": null,
+    "answer": "OSSD stands for Output Signal Switching Device. It is the safety output from a device such as a light curtain or safety scanner. There are two (OSSD1 and OSSD2) to provide redundancy — both must be active for the machine to run. If either fails, the safety system detects the fault and stops the machine."
+  },
+  {
+    "section": "Section C — Application (3 marks)",
+    "q": 10,
+    "text": "Could you connect P24SF to N244? Explain fully why or why not.",
+    "marks": 3,
+    "image": null,
+    "answer": "No. P24SF is a +24V positive rail and N244 is a 0V negative return rail from a different power supply circuit. Connecting them directly would create a short circuit, potentially blowing fuses, damaging the power supply, or causing injury. Additionally mixing power supply commons (SF suffix indicates safety supply) could compromise the integrity of the safety circuit, invalidating its SIL/PL rating."
+  }
+]
