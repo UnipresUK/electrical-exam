@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Electrical Drawing Exam — UPUK0002</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f3; color: #1a1a1a; font-size: 16px; line-height: 1.6; }
+  .app { max-width: 760px; margin: 0 auto; padding: 2rem 1.25rem; }
+  h1 { font-size: 22px; font-weight: 500; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: #666; margin-bottom: 2rem; }
+  .card { background: #fff; border: 1px solid #e5e5e3; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+  .section-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: #999; margin: 1.5rem 0 0.75rem; }
+  .q-number { font-size: 12px; color: #aaa; margin-bottom: 4px; }
+  .q-text { font-size: 15px; color: #1a1a1a; margin-bottom: 10px; line-height: 1.5; }
+  .marks { font-size: 12px; color: #888; margin-bottom: 10px; }
+  textarea { width: 100%; border: 1px solid #ddd; border-radius: 8px; padding: 10px 12px; font-size: 14px; font-family: inherit; color: #1a1a1a; background: #fafaf9; resize: vertical; min-height: 80px; line-height: 1.5; }
+  textarea:focus { outline: none; border-color: #aaa; }
+  .identity-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.5rem; }
+  input[type=text], input[type=date] { width: 100%; border: 1px solid #ddd; border-radius: 8px; padding: 9px 12px; font-size: 14px; font-family: inherit; color: #1a1a1a; background: #fafaf9; }
+  input:focus { outline: none; border-color: #aaa; }
+  label { font-size: 13px; color: #666; display: block; margin-bottom: 4px; }
+  .btn-submit { background: #1a1a1a; color: #fff; border: none; border-radius: 8px; padding: 13px 28px; font-size: 15px; font-family: inherit; cursor: pointer; width: 100%; margin-top: 1rem; font-weight: 500; }
+  .btn-submit:hover { background: #333; }
+  .btn-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+  .img-box { border: 1px dashed #ccc; border-radius: 8px; padding: 8px; margin-bottom: 12px; background: #fafaf9; }
+  .img-box img { max-width: 100%; border-radius: 6px; display: block; }
+  .mc-options { list-style: none; padding: 0; margin: 0 0 10px 0; }
+  .mc-options li { margin-bottom: 6px; }
+  .mc-options label { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #1a1a1a; cursor: pointer; padding: 8px 12px; border: 1px solid #e5e5e3; border-radius: 8px; background: #fafaf9; transition: border-color 0.15s; }
+  .mc-options label:hover { border-color: #aaa; }
+  .mc-options input[type=radio] { accent-color: #1a1a1a; }
+  @media (max-width: 500px) { .identity-row { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- EXAM VIEW -->
+  <div id="exam-view">
+    <h1>Electrical Drawing Exam</h1>
+    <p class="subtitle">BOX LAYOUT — Sheet 03 &nbsp;|&nbsp; Tool No: UPUK0002 &nbsp;|&nbsp; Total: <span id="total-marks-display">25</span> marks</p>
+
+    <div class="identity-row">
+      <div><label for="app-name">Full name</label><input type="text" id="app-name" placeholder="Enter your name" /></div>
+      <div><label for="app-date">Date</label><input type="date" id="app-date" /></div>
+    </div>
+
+    <div id="questions-container"></div>
+    <button class="btn-submit" id="submit-btn" onclick="submitExam()">Submit answers</button>
+  </div>
+
+  <!-- SUBMITTED CONFIRMATION -->
+  <div id="submitted-view" style="display:none; text-align:center;">
+    <div class="card" style="padding:2.5rem 1.5rem;">
+      <div style="font-size:48px;margin-bottom:12px;">&#10003;</div>
+      <h1 style="margin-bottom:8px;">Exam Submitted</h1>
+      <p style="color:#666;font-size:15px;">Thank you, <strong id="submitted-name"></strong>. Your answers have been recorded.</p>
+      <p style="color:#999;font-size:13px;margin-top:12px;">You can close this page now. Your reviewer will be in touch with your results.</p>
+      <button class="btn-submit" style="max-width:300px;margin:1.5rem auto 0;" onclick="resetExam()">Retake Exam</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxOdCiEMvABzkW2Wgh4a_ZFAQOlhTzk53-34CPl8ZkJ8PDdhO3xbrwB28PufBxjQ_jb/exec";
+
+let questions = [];
+let TOTAL = 0;
+let submitted = {};
+let apprenticeName = "", examDate = "";
+
+async function loadQuestions() {
+  try {
+    const res = await fetch("questions.json");
+    questions = await res.json();
+  } catch (e) {
+    console.error("Could not load questions.json", e);
+  }
+  TOTAL = questions.reduce((sum, q) => sum + q.marks, 0);
+  document.getElementById("total-marks-display").textContent = TOTAL;
+  buildExam();
+}
+
+function buildExam() {
+  const c = document.getElementById("questions-container");
+  c.innerHTML = "";
+  document.getElementById("app-date").value = new Date().toISOString().split("T")[0];
+  let lastSection = null;
+
+  questions.forEach(q => {
+    if (q.section && q.section !== lastSection) {
+      const sl = document.createElement("div");
+      sl.className = "section-label";
+      sl.textContent = q.section;
+      c.appendChild(sl);
+      lastSection = q.section;
+    }
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const imgHTML = q.image ? `<div class="img-box"><img src="${q.image}" alt="Reference diagram for question ${q.q}" loading="lazy" /></div>` : "";
+
+    let inputHTML = "";
+    if (q.options && q.options.length > 0) {
+      inputHTML = `<ul class="mc-options">${q.options.map(opt =>
+        `<li><label><input type="radio" name="ans-${q.q}" value="${opt}" /> ${opt}</label></li>`
+      ).join("")}</ul>`;
+    } else {
+      inputHTML = `<textarea id="ans-${q.q}" placeholder="Type your answer here..." rows="${q.marks === 1 ? 2 : q.marks === 2 ? 3 : 5}"></textarea>`;
+    }
+
+    card.innerHTML = `
+      <div class="q-number">Question ${q.q}</div>
+      <div class="q-text">${q.text}</div>
+      <div class="marks">${q.marks} mark${q.marks > 1 ? "s" : ""}</div>
+      ${imgHTML}
+      ${inputHTML}
+    `;
+    c.appendChild(card);
+  });
+}
+
+async function submitExam() {
+  apprenticeName = document.getElementById("app-name").value.trim();
+  examDate = document.getElementById("app-date").value;
+  if (!apprenticeName) { alert("Please enter your name before submitting."); return; }
+
+  const btn = document.getElementById("submit-btn");
+  btn.disabled = true;
+  btn.textContent = "Submitting...";
+
+  questions.forEach(q => {
+    if (q.options && q.options.length > 0) {
+      const selected = document.querySelector(`input[name="ans-${q.q}"]:checked`);
+      submitted[q.q] = selected ? selected.value : "";
+    } else {
+      submitted[q.q] = document.getElementById("ans-" + q.q).value.trim();
+    }
+  });
+
+  if (GOOGLE_SCRIPT_URL) {
+    try {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: apprenticeName,
+          date: examDate,
+          answers: questions.map(q => ({
+            q: q.q, marks: q.marks, question: q.text,
+            answer: submitted[q.q] || "(no answer)"
+          }))
+        })
+      });
+    } catch (err) { console.warn("Could not send to Google Sheets:", err); }
+  }
+
+  document.getElementById("exam-view").style.display = "none";
+  document.getElementById("submitted-view").style.display = "block";
+  document.getElementById("submitted-name").textContent = apprenticeName;
+}
+
+function resetExam() {
+  submitted = {};
+  apprenticeName = "";
+  examDate = "";
+  document.getElementById("app-name").value = "";
+  const btn = document.getElementById("submit-btn");
+  btn.disabled = false;
+  btn.textContent = "Submit answers";
+  buildExam();
+  document.getElementById("submitted-view").style.display = "none";
+  document.getElementById("exam-view").style.display = "block";
+}
+
+loadQuestions();
+</script>
+</body>
+</html>

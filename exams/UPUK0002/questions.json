@@ -1,0 +1,82 @@
+[
+  {
+    "section": "Section A — Terminology (1 mark each)",
+    "q": 1,
+    "text": "Question 1 — edit this in questions.json",
+    "marks": 1,
+    "image": null,
+    "answer": "Model answer for question 1."
+  },
+  {
+    "section": null,
+    "q": 2,
+    "text": "Question 2 — edit this in questions.json",
+    "marks": 1,
+    "image": null,
+    "answer": "Model answer for question 2."
+  },
+  {
+    "section": null,
+    "q": 3,
+    "text": "Question 3 — edit this in questions.json",
+    "marks": 1,
+    "image": null,
+    "answer": "Model answer for question 3."
+  },
+  {
+    "section": null,
+    "q": 4,
+    "text": "Question 4 — edit this in questions.json",
+    "marks": 1,
+    "image": null,
+    "answer": "Model answer for question 4."
+  },
+  {
+    "section": null,
+    "q": 5,
+    "text": "Question 5 — edit this in questions.json",
+    "marks": 1,
+    "image": null,
+    "answer": "Model answer for question 5."
+  },
+  {
+    "section": "Section B — Understanding (2 marks each)",
+    "q": 6,
+    "text": "Question 6 — edit this in questions.json",
+    "marks": 2,
+    "image": null,
+    "answer": "Model answer for question 6."
+  },
+  {
+    "section": null,
+    "q": 7,
+    "text": "Question 7 — edit this in questions.json",
+    "marks": 2,
+    "image": null,
+    "answer": "Model answer for question 7."
+  },
+  {
+    "section": null,
+    "q": 8,
+    "text": "Question 8 — edit this in questions.json",
+    "marks": 2,
+    "image": null,
+    "answer": "Model answer for question 8."
+  },
+  {
+    "section": "Section C — Application (3 marks each)",
+    "q": 9,
+    "text": "Question 9 — edit this in questions.json",
+    "marks": 3,
+    "image": null,
+    "answer": "Model answer for question 9."
+  },
+  {
+    "section": null,
+    "q": 10,
+    "text": "Question 10 — edit this in questions.json",
+    "marks": 3,
+    "image": null,
+    "answer": "Model answer for question 10."
+  }
+]
