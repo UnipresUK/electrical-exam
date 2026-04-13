@@ -131,6 +131,7 @@
       <h1 style="margin-bottom:8px;">Exam Submitted</h1>
       <p style="color:#666;font-size:15px;">Thank you, <strong id="submitted-name"></strong>. Your answers have been recorded.</p>
       <p style="color:#999;font-size:13px;margin-top:12px;">You can close this page now. Your reviewer will be in touch with your results.</p>
+      <button class="btn-submit" style="max-width:300px;margin:1.5rem auto 0;" onclick="resetExam()">Retake Exam</button>
     </div>
   </div>
 
@@ -393,6 +394,29 @@ function copyLink() {
     btn.textContent = "Copied!";
     setTimeout(() => btn.textContent = "Copy link", 2000);
   });
+}
+
+/* ── Reset Exam (retake) ── */
+function resetExam() {
+  // Clear all state
+  submitted = {};
+  apprenticeName = "";
+  examDate = "";
+  Object.keys(scores).forEach(k => delete scores[k]);
+
+  // Clear form inputs
+  document.getElementById("app-name").value = "";
+  const btn = document.getElementById("submit-btn");
+  btn.disabled = false;
+  btn.textContent = "Submit answers";
+
+  // Rebuild fresh questions with empty textareas
+  buildExam();
+
+  // Hide reviewer nav buttons, show exam
+  document.getElementById("nav-review").style.display = "none";
+  document.getElementById("nav-submitted").style.display = "none";
+  showView("exam");
 }
 
 /* ── Init ── */
