@@ -20,7 +20,7 @@
     "q": 3,
     "text": "What does an arrow on a wire or conductor indicate on an electrical drawing?",
     "marks": 1,
-    "image": "images/drawing-sheet-reference.jpg",
+    "image": "images/Electrical drawings - Arrows.png",
     "answer": "An arrow indicates the continuation of a wire or signal to another sheet. The direction shows whether the signal is going to or coming from another sheet."
   },
   {
