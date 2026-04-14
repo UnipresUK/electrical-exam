@@ -12,7 +12,7 @@
     "q": 2,
     "text": "What does a number shown in brackets on an electrical drawing signify — for example (0400) or (0615)?",
     "marks": 1,
-    "image": "images/drawing-sheet-reference.jpg",
+    "image": "images/Electrical drawings - Numbers.png",
     "answer": "A number in brackets is a cross-reference to another sheet in the drawing set. It tells you where that wire or signal continues to or comes from on a different drawing sheet."
   },
   {
